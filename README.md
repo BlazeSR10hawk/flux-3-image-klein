@@ -36,6 +36,8 @@ Leads in quality and speed among open weights models: the Pareto frontier of Elo
 | Fine-tuning, LoRA training, research | FLUX 3 Image Klein Base |
 | An 8 GB GPU (RTX 3070 class) | the int8 files in [ComfyUI](#run-it-elsewhere) |
 
+Whichever model you pick, we highly recommend running it with the [prompt upsampler](#prompt-upsampling), on by default.
+
 ### Text-to-image examples
 
 ![Text-to-image examples](assets/t2i.jpg)
@@ -79,14 +81,15 @@ The installation was tested on B200; see [Memory](#memory) for other GPUs.
 
 ### Weights
 
-The fast model alone, 22 GB:
+The fast model with its prompt upsampler, 52 GB:
 
 ```bash
 hf download black-forest-labs/flux-3-image-klein --local-dir weights/flux-3-image-klein --exclude 'variants/*'
+hf download black-forest-labs/flux-3-image-klein-pup --local-dir weights/pup
 hf download Falconsai/nsfw_image_detection --local-dir weights/nsfw-classifier
 ```
 
-Everything, 84 GB:
+Everything, 107 GB:
 
 ```bash
 hf download black-forest-labs/flux-3-image-klein-base --local-dir weights/flux-3-image-klein-base
@@ -96,14 +99,15 @@ hf download Falconsai/nsfw_image_detection --local-dir weights/nsfw-classifier
 ```
 
 `WEIGHTS_DIR` points at another root (default `./weights`). The quantized DiTs live under `variants/fp8r` and
-`variants/nvfp4` in each repository; the text encoder and autoencoder ship with both.
+`variants/nvfp4` in each repository; the text encoder and autoencoder ship with both. `weights/pup` is the prompt
+upsampler: skip it only if you must (`--no-pup`), see [Prompt upsampling](#prompt-upsampling).
 
 ## Run the CLI
 
 ### Text to image
 
 ```bash
-python scripts/cli.py "A man walking with his dog, afternoon sun" --model distilled --no-pup --out out.png --seed 7
+python scripts/cli.py "A man walking with his dog, afternoon sun" --model distilled --out out.png --seed 7
 ```
 
 Each generated image comes with a `.json` containing the prompt, size, number of steps, guidance value and seed; [examples/README.md](examples/README.md) has the command behind every
@@ -172,7 +176,8 @@ Three tabs: **Layout** (draw boxes, type what goes in each), **Text to image**, 
 
 The upsampler ([black-forest-labs/flux-3-image-klein-pup](https://huggingface.co/black-forest-labs/flux-3-image-klein-pup),
 a 9B vision-language model fine-tuned from Qwen3.5-9B) expands a short request into the detailed prompt the model
-works best with, before it reaches the text encoder. On by default; `--no-pup` sends the prompt as typed.
+works best with, before it reaches the text encoder. It is on by default in the CLI, the demo and `generate`, and we
+highly recommend keeping it on for text-to-image, editing and layout alike; `--no-pup` sends the prompt as typed.
 
 | input prompt | what the model saw |
 |---|---|
