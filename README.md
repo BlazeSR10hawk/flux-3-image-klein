@@ -8,7 +8,8 @@
 
 This repository contains the reference inference code for [FLUX 3 Image Klein](https://bfl.ai/models/flux-3-image-klein), the 5.6B open weights image model
 from [Black Forest Labs](https://bfl.ai): text-to-image, editing with up to 10 reference images, and layout control
-with bounding boxes, through one model.
+with bounding boxes, through one model. It ships with a [prompt upsampler](#prompt-upsampling) that we highly recommend
+using with it.
 
 ![FLUX 3 Image Klein text-to-image](assets/hero.jpg)
 
@@ -35,6 +36,11 @@ Leads in quality and speed among open weights models: the Pareto frontier of Elo
 | Generation and editing, self-hosting | FLUX 3 Image Klein (distilled): the same model in 16 steps without CFG, about 6x faster |
 | Fine-tuning, LoRA training, research | FLUX 3 Image Klein Base |
 | An 8 GB GPU (RTX 3070 class) | the int8 files in [ComfyUI](#run-it-elsewhere) |
+
+> [!IMPORTANT]
+> Whichever model you pick, run it with the [prompt upsampler](#prompt-upsampling). We highly recommend it: it turns
+> a short request into the detailed prompt the model works best with. It is on by default in the CLI, the demo and
+> the Python API.
 
 ### Text-to-image examples
 
@@ -79,14 +85,15 @@ The installation was tested on B200; see [Memory](#memory) for other GPUs.
 
 ### Weights
 
-The fast model alone, 22 GB:
+The fast model with its prompt upsampler, 52 GB:
 
 ```bash
 hf download black-forest-labs/flux-3-image-klein --local-dir weights/flux-3-image-klein --exclude 'variants/*'
+hf download black-forest-labs/flux-3-image-klein-pup --local-dir weights/pup
 hf download Falconsai/nsfw_image_detection --local-dir weights/nsfw-classifier
 ```
 
-Everything, 84 GB:
+Everything, 107 GB:
 
 ```bash
 hf download black-forest-labs/flux-3-image-klein-base --local-dir weights/flux-3-image-klein-base
@@ -96,14 +103,19 @@ hf download Falconsai/nsfw_image_detection --local-dir weights/nsfw-classifier
 ```
 
 `WEIGHTS_DIR` points at another root (default `./weights`). The quantized DiTs live under `variants/fp8r` and
-`variants/nvfp4` in each repository; the text encoder and autoencoder ship with both.
+`variants/nvfp4` in each repository; the text encoder and autoencoder ship with both. `weights/pup` is the
+[prompt upsampler](#prompt-upsampling).
 
 ## Run the CLI
+
+> [!IMPORTANT]
+> The commands below send the prompt through the [upsampler](#prompt-upsampling) before the model. We highly
+> recommend keeping it that way; `--no-pup` sends the prompt as typed.
 
 ### Text to image
 
 ```bash
-python scripts/cli.py "A man walking with his dog, afternoon sun" --model distilled --no-pup --out out.png --seed 7
+python scripts/cli.py "A man walking with his dog, afternoon sun" --model distilled --out out.png --seed 7
 ```
 
 Each generated image comes with a `.json` containing the prompt, size, number of steps, guidance value and seed; [examples/README.md](examples/README.md) has the command behind every
@@ -172,7 +184,8 @@ Three tabs: **Layout** (draw boxes, type what goes in each), **Text to image**, 
 
 The upsampler ([black-forest-labs/flux-3-image-klein-pup](https://huggingface.co/black-forest-labs/flux-3-image-klein-pup),
 a 9B vision-language model fine-tuned from Qwen3.5-9B) expands a short request into the detailed prompt the model
-works best with, before it reaches the text encoder. On by default; `--no-pup` sends the prompt as typed.
+works best with, before it reaches the text encoder. It is on by default in the CLI, the demo and `generate`, and we
+highly recommend keeping it on for text-to-image, editing and layout alike; `--no-pup` sends the prompt as typed.
 
 | input prompt | what the model saw |
 |---|---|
