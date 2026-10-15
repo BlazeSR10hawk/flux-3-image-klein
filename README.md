@@ -8,8 +8,8 @@
 
 This repository contains the reference inference code for [FLUX 3 Image Klein](https://bfl.ai/models/flux-3-image-klein), the 5.6B open weights image model
 from [Black Forest Labs](https://bfl.ai): text-to-image, editing with up to 10 reference images, and layout control
-with bounding boxes, through one model. It ships with a [prompt upsampler](#prompt-upsampling) that we highly recommend
-using with it.
+with bounding boxes, through one model. It ships with a [prompt upsampler](#prompt-upsampling); do not use the model
+without it.
 
 ![FLUX 3 Image Klein text-to-image](assets/hero.jpg)
 
@@ -38,9 +38,9 @@ Leads in quality and speed among open weights models: the Pareto frontier of Elo
 | An 8 GB GPU (RTX 3070 class) | the int8 files in [ComfyUI](#run-it-elsewhere) |
 
 > [!IMPORTANT]
-> Whichever model you pick, run it with the [prompt upsampler](#prompt-upsampling). We highly recommend it: it turns
-> a short request into the detailed prompt the model works best with. It is on by default in the CLI, the demo and
-> the Python API.
+> Do not use either model without the [prompt upsampler](#prompt-upsampling). The model is trained on the captions it
+> writes; a prompt sent as typed gives noticeably weaker results. It is on by default in the CLI, the demo and the
+> Python API.
 
 ### Text-to-image examples
 
@@ -104,13 +104,13 @@ hf download Falconsai/nsfw_image_detection --local-dir weights/nsfw-classifier
 
 `WEIGHTS_DIR` points at another root (default `./weights`). The quantized DiTs live under `variants/fp8r` and
 `variants/nvfp4` in each repository; the text encoder and autoencoder ship with both. `weights/pup` is the
-[prompt upsampler](#prompt-upsampling).
+[prompt upsampler](#prompt-upsampling), which the model needs.
 
 ## Run the CLI
 
 > [!IMPORTANT]
-> The commands below send the prompt through the [upsampler](#prompt-upsampling) before the model. We highly
-> recommend keeping it that way; `--no-pup` sends the prompt as typed.
+> The commands below send the prompt through the [upsampler](#prompt-upsampling) before the model. Do not pass
+> `--no-pup` unless the prompt already is an upsampler caption ([Smaller GPUs](#smaller-gpus)).
 
 ### Text to image
 
@@ -145,11 +145,15 @@ Format in [Bounding boxes](#bounding-boxes).
 
 ### Smaller GPUs
 
+`--fp8` (Ada, Hopper, Blackwell) or `--nvfp4` (Blackwell) load the quantized DiTs. When the upsampler and the model do
+not fit on the GPU together, run the upsampler on its own first and pass its caption with `--no-pup`:
+
 ```bash
-python scripts/cli.py "..." --model distilled --fp8 --no-pup --out out.png
+python -m flux3.pup --prompt "A man walking with his dog, afternoon sun" --out prompt.txt
+python scripts/cli.py "$(cat prompt.txt)" --model distilled --fp8 --no-pup --out out.png
 ```
 
-`--fp8` (Ada, Hopper, Blackwell) or `--nvfp4` (Blackwell) load the quantized DiTs; `--no-pup` skips the upsampler. Numbers in [Memory](#memory).
+Numbers in [Memory](#memory).
 
 ### From Python
 
@@ -184,8 +188,9 @@ Three tabs: **Layout** (draw boxes, type what goes in each), **Text to image**, 
 
 The upsampler ([black-forest-labs/flux-3-image-klein-pup](https://huggingface.co/black-forest-labs/flux-3-image-klein-pup),
 a 9B vision-language model fine-tuned from Qwen3.5-9B) expands a short request into the detailed prompt the model
-works best with, before it reaches the text encoder. It is on by default in the CLI, the demo and `generate`, and we
-highly recommend keeping it on for text-to-image, editing and layout alike; `--no-pup` sends the prompt as typed.
+works best with, before it reaches the text encoder. It is on by default in the CLI, the demo and `generate`. Do not use
+the model without it, for text-to-image, editing and layout alike: `--no-pup` sends the prompt as typed, and the results
+are noticeably weaker.
 
 | input prompt | what the model saw |
 |---|---|

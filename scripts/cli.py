@@ -26,7 +26,7 @@ def main() -> None:
     parser.add_argument("--steps", type=int)
     parser.add_argument("--guidance", type=float, help="CFG scale (base only)")
     parser.add_argument("--seed", type=int)
-    parser.add_argument("--no-pup", action="store_true", help="send the prompt as typed instead of upsampling it first")
+    parser.add_argument("--no-pup", action="store_true", help="send the prompt as typed instead of upsampling it first; only for a prompt that already is an upsampler caption")
     parser.add_argument("--pup-memory", type=float, default=0.35, help="share of the GPU reserved for the upsampler")
     quant = parser.add_mutually_exclusive_group()
     quant.add_argument("--fp8", action="store_true", help="rowwise FP8 DiT, from <weights entry>/variants/fp8r")
