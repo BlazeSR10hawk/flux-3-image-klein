@@ -1,0 +1,51 @@
+[project]
+name = "flux3"
+version = "0.1.0"
+description = "Inference codebase for FLUX 3 Image Klein"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10,<3.13"
+authors = [
+  { name = "Black Forest Labs", email = "support@blackforestlabs.ai" }
+]
+
+dependencies = [
+  "torch==2.11.0",
+  "torchvision==0.26.0",
+  "triton==3.6.0",
+  "vllm==0.21.0",
+  "transformers==5.8.1",
+  "tokenizers==0.22.2",
+  "accelerate==1.13.0",
+  "safetensors==0.8.0rc0",
+  "pillow==10.3.0",
+  "numpy==2.3.5",
+  "gradio==6.28.0",
+  "gradio_image_annotation==0.5.6",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff==0.6.8",
+]
+nvfp4 = [  # --nvfp4 (Blackwell)
+  "flashinfer-python==0.6.8.post1",
+  "flashinfer-cubin==0.6.8.post1",
+  "flashinfer-jit-cache==0.6.8.post1",  # prebuilt kernels: no nvcc (index: https://flashinfer.ai/whl/cu130)
+]
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+flux3 = ["pup_prompts.json"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+ignore = [
+  "E501",  # line too long (handled by formatter)
+]

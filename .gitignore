@@ -1,0 +1,8 @@
+weights/
+.venv/
+__pycache__/
+*.png
+*.json
+!src/flux3/pup_prompts.json
+!examples/**
+*.egg-info/
