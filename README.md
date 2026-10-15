@@ -8,7 +8,8 @@
 
 This repository contains the reference inference code for [FLUX 3 Image Klein](https://bfl.ai/models/flux-3-image-klein), the 5.6B open weights image model
 from [Black Forest Labs](https://bfl.ai): text-to-image, editing with up to 10 reference images, and layout control
-with bounding boxes, through one model.
+with bounding boxes, through one model. It ships with a [prompt upsampler](#prompt-upsampling) that we highly recommend
+using with it.
 
 ![FLUX 3 Image Klein text-to-image](assets/hero.jpg)
 
@@ -36,7 +37,10 @@ Leads in quality and speed among open weights models: the Pareto frontier of Elo
 | Fine-tuning, LoRA training, research | FLUX 3 Image Klein Base |
 | An 8 GB GPU (RTX 3070 class) | the int8 files in [ComfyUI](#run-it-elsewhere) |
 
-Whichever model you pick, we highly recommend running it with the [prompt upsampler](#prompt-upsampling), on by default.
+> [!IMPORTANT]
+> Whichever model you pick, run it with the [prompt upsampler](#prompt-upsampling). We highly recommend it: it turns
+> a short request into the detailed prompt the model works best with. It is on by default in the CLI, the demo and
+> the Python API.
 
 ### Text-to-image examples
 
@@ -99,10 +103,14 @@ hf download Falconsai/nsfw_image_detection --local-dir weights/nsfw-classifier
 ```
 
 `WEIGHTS_DIR` points at another root (default `./weights`). The quantized DiTs live under `variants/fp8r` and
-`variants/nvfp4` in each repository; the text encoder and autoencoder ship with both. `weights/pup` is the prompt
-upsampler: skip it only if you must (`--no-pup`), see [Prompt upsampling](#prompt-upsampling).
+`variants/nvfp4` in each repository; the text encoder and autoencoder ship with both. `weights/pup` is the
+[prompt upsampler](#prompt-upsampling).
 
 ## Run the CLI
+
+> [!IMPORTANT]
+> The commands below send the prompt through the [upsampler](#prompt-upsampling) before the model. We highly
+> recommend keeping it that way; `--no-pup` sends the prompt as typed.
 
 ### Text to image
 
