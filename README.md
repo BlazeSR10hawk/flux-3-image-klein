@@ -226,8 +226,10 @@ a reference, where it goes in the output, or both.
 | | |
 |---|---|
 | [ComfyUI](https://github.com/comfyanonymous/ComfyUI) | [black-forest-labs/flux-3-image-klein-comfy](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy): bf16, int8 and NVFP4 files for both models. The int8 files run on 8 GB GPUs such as the RTX 3070 |
-| [Diffusers](https://github.com/huggingface/diffusers) | from launch day |
-| [SGLang](https://github.com/sgl-project/sglang), [vLLM](https://github.com/vllm-project/vllm) | from launch day |
+| [Diffusers](https://github.com/huggingface/diffusers) | [FLUX 3 Image Klein pipeline docs](https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/flux3.md): modular pipeline, runs the prompt upsampler on every request |
+| [SGLang](https://github.com/sgl-project/sglang) | [FLUX.3 cookbook](https://docs.sglang.io/cookbook/diffusion/FLUX/FLUX.3) |
+| [vLLM](https://github.com/vllm-project/vllm) | [vLLM recipe](https://recipes.vllm.ai/black-forest-labs/flux-3-image-klein) |
+| [TensorRT LLM](https://github.com/NVIDIA/TensorRT-LLM) | [Deployment guide](https://github.com/NVIDIA/TensorRT-LLM/blob/feat/flux3-image-klein/docs/source/deployment-guide/deployment-guide-for-flux3-image-klein-on-trtllm.md): bf16, FP8 and NVFP4 for both models, on the `feat/flux3-image-klein` branch |
 
 ## Benchmarks
 
