@@ -145,8 +145,13 @@ Format in [Bounding boxes](#bounding-boxes).
 
 ### Smaller GPUs
 
-`--fp8` (Ada, Hopper, Blackwell) or `--nvfp4` (Blackwell) load the quantized DiTs. When the upsampler and the model do
-not fit on the GPU together, run the upsampler on its own first and pass its caption with `--no-pup`:
+`--fp8` (Ada, Hopper, Blackwell) or `--nvfp4` (Blackwell) load the quantized DiTs.
+
+An external vision-language model can also write the caption in place of the upsampler: give it the
+[system prompts](src/flux3/pup_prompts_external_vlm.json) and pass its answer with `--no-pup`.
+
+When the upsampler and the model do not fit on the GPU together, run the upsampler on its own first and pass its
+caption with `--no-pup`:
 
 ```bash
 python -m flux3.pup --prompt "A man walking with his dog, afternoon sun" --out prompt.txt
