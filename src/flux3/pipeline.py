@@ -17,7 +17,7 @@ from flux3.text_encoder import TextEncoder
 
 WEIGHTS = Path(os.environ.get("WEIGHTS_DIR", "weights"))
 MODELS = {  # weights entry (the Hub repository, downloaded there), default steps, CFG scale (None: a flow map, sampled without CFG)
-    "base": {"dit": "flux-3-image-klein-base", "steps": 50, "guidance": 3.5},
+    "base": {"dit": "flux-3-image-klein-base", "steps": 50, "guidance": 4.0},
     "distilled": {"dit": "flux-3-image-klein", "steps": 16, "guidance": None},
 }
 QUANT = {"fp8": "fp8r", "nvfp4": "nvfp4"}  # variants/ subfolder of the weights entry
@@ -60,7 +60,7 @@ class Pipeline:
         return self.dits[model]
 
     def generate(self, model: str, prompt: str, references: list[Image.Image], width: int, height: int,
-                 steps: int, guidance: float | None, seed: int, alpha: float = 6.93) -> Image.Image:
+                 steps: int, guidance: float | None, seed: int, alpha: float = 16.0) -> Image.Image:
         if len(references) > MAX_REFERENCES:
             raise ValueError(f"at most {MAX_REFERENCES} references")
         dit = self.dit(model)
