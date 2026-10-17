@@ -161,7 +161,7 @@ def build(models: Models, has_pup: bool) -> gr.Blocks:
                     with gr.Row():
                         seed = gr.Number(value=-1, precision=0, label="Seed (-1: from the prompt)")
                         steps = gr.Number(value=None, precision=0, label="Steps (empty: model default)")
-                        guidance = gr.Slider(1.0, 10.0, value=3.5, step=0.1, label="CFG scale (base only)")
+                        guidance = gr.Slider(1.0, 10.0, value=4.0, step=0.1, label="CFG scale (base only)")
                     safety = gr.Checkbox(value=False, label="Safety checks (refuse copyrighted characters, brands, "
                                                             "public figures and adult content)")
             with gr.Column(scale=1):

@@ -17,7 +17,7 @@ from flux3.safety import exif
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("prompt")
-    parser.add_argument("--model", choices=MODELS, default="base", help="base: 50 steps, CFG 3.5; distilled: 16 steps, no CFG")
+    parser.add_argument("--model", choices=MODELS, default="base", help="base: 50 steps, CFG 4; distilled: 16 steps, no CFG")
     parser.add_argument("--image", action="append", default=[], help=f"reference image; repeat for several (max {MAX_REFERENCES})")
     parser.add_argument("--boxes", help="JSON list of boxes, see README")
     parser.add_argument("--out", default="out.png")
