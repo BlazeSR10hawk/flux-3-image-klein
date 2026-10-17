@@ -4,5 +4,6 @@ __pycache__/
 *.png
 *.json
 !src/flux3/pup_prompts.json
+!src/flux3/pup_prompts_external_vlm.json
 !examples/**
 *.egg-info/
